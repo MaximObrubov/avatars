@@ -1,14 +1,12 @@
 FROM node:17.7.2
 
-# DO NOT perform any action from root user
-RUN groupadd -r avuser && useradd -r -g avuser avuser
 
-RUN npm install && npm run build
-WORKDIR /app
-COPY app /app
-COPY cmd.sh /app/
+COPY package.json tsconfig.build.json tsconfig.json cmd.sh /home/node/app/
+RUN chown -R node:node /home/node
 
-EXPOSE 9090 9091
-USER avuser
+EXPOSE 3000
+USER node
+WORKDIR /home/node/app/
+RUN npm install
 
 CMD ["./cmd.sh"]

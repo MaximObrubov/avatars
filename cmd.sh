@@ -1,9 +1,10 @@
-#! /bin/bash
+#!/bin/bash
 set -e
-if [$ENV = 'DEV']; then
+
+if [ "$ENV" = 'DEV' ]; then
   echo "Running development server"
-  exec npm run start
+  npm run start:dev
 else
   echo "Running production server"
-  exec npm run serve
+  npm run serve
 fi

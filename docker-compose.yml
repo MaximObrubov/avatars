@@ -1,0 +1,28 @@
+networks:
+  avy-net:
+    driver: bridge
+
+services:
+  avatar:
+    build: .
+    container_name: avatars_serv_container
+    ports:
+      - "3000:3000"
+    environment:
+      - ENV=DEV
+      - IMAGE_GEN_HOST=http://dnmonster:8080
+    networks:
+      - avy-net
+    depends_on:
+      - dnmonster
+    volumes:
+      - ./src:/home/node/app/src
+      - /home/node/app/node_modules
+
+  dnmonster:
+    image: amouat/dnmonster:1.0
+    container_name: avatars_dbmonster_container
+    networks:
+      - avy-net
+    ports:
+      - "8080"
