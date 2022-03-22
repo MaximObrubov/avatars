@@ -3,13 +3,11 @@ import {
   Get,
   Render,
   Param,
+  Res,
 } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { AppService } from './app.service';
-import { map } from 'rxjs/operators';
 
 import * as crypto from 'crypto';
-// var crypto = require('crypto');
 
 @Controller()
 export class AppController {
@@ -18,7 +16,7 @@ export class AppController {
 
   name: string;
 
-  constructor(private readonly appService: AppService, private http: HttpService) {
+  constructor(private readonly appService: AppService) {
     this.name = this.defaultName;
   }
 
@@ -32,24 +30,8 @@ export class AppController {
   }
 
   @Get('/avatar/:name')
-  async getImage(@Param() name) {
-    return await this.genImage(name);
-  }
-
-  private async genImage(name) {
-    const response = this.http.get(`${process.env.IMAGE_GEN_HOST}/${name}`);
-
-    response.pipe(
-      map(response => {
-        console.log('===================================================')
-        console.log(response)
-        console.log('===================================================')
-
-      })
-    )
-
-
-    return response;
+  async getImage(@Param() name, @Res() res) {
+    return this.appService.getPic(name);
   }
 
   private get hashedName() {
