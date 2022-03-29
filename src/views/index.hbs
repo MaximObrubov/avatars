@@ -6,9 +6,13 @@
   </head>
   <body>
     {{ message }}
-    {{ name }}
 
-    <img src="/avatar/{{ name }}" alt="">
+    <img src="{{image_test}}" alt="">
 
+    {{#if image}}
+      <img src="{{image}}" alt="">
+    {{else}}
+      No image
+    {{/if}}
   </body>
 </html>

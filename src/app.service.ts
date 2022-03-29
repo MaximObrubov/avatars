@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios';
 @Injectable()
 export class AppService {
 
-  PIC_SERVICE_URL = `${process.env.IMAGE_GEN_HOST}/monster`;
+  PIC_SERVICE_URL = `${process.env.IMAGE_GEN_HOST}`;
 
   constructor(private http: HttpService) {}
 
@@ -16,15 +16,10 @@ export class AppService {
     return 'Hello World!';
   }
 
+  // TODO: probably don't needed
   getPic(name: string): Observable<AxiosResponse<ImageBitmap>> {
     return this.http.get(`${this.PIC_SERVICE_URL}/${name}`).pipe(
       map((axiosResponse: AxiosResponse) => {
-
-        console.log('===================================================')
-        console.log(axiosResponse.data)
-        console.log('===================================================')
-
-
         return axiosResponse.data;
       })
     );;

@@ -20,12 +20,23 @@ export class AppController {
     this.name = this.defaultName;
   }
 
+
+
   @Get()
   @Render('index')
   getHello() {
+
+    console.log('===================================================')
+    console.log(this.appService.PIC_SERVICE_URL)
+    console.log(process.env.IMAGE_GEN_HOST)
+    console.log('===================================================')
+
+
     return {
       message: 'Hello111 world!',
-      name: this.hashedName,
+      image_test: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
+      image: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
+      // image: this.appService.getPic(this.hashedName)
     }
   }
 
