@@ -6,11 +6,20 @@
   </head>
   <body>
     {{ message }}
+    hello, {{ name }}
 
-    <img src="{{image_test}}" alt="">
+    <form action="/change-name" method="post">
+      <input type="text" name="name" value="{{name}}" />
+      <input type="submit" />
+    </form>
+
+
+    <img src="http://localhost:8080/{{image_path}}" alt="">
 
     {{#if image}}
-      <img src="{{image}}" alt="">
+      {{!-- TODO not working alias for container --}}
+      {{!-- <img src="{{image}}" alt=""> --}}
+      <img src="http://localhost:8080/{{image_path}}" alt="">
     {{else}}
       No image
     {{/if}}

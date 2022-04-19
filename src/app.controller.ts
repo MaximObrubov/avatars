@@ -4,6 +4,7 @@ import {
   Render,
   Param,
   Res,
+  Post,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 
@@ -20,25 +21,32 @@ export class AppController {
     this.name = this.defaultName;
   }
 
-
-
   @Get()
   @Render('index')
   getHello() {
-
-    console.log('===================================================')
-    console.log(this.appService.PIC_SERVICE_URL)
-    console.log(process.env.IMAGE_GEN_HOST)
-    console.log('===================================================')
-
-
     return {
       message: 'Hello111 world!',
+      name: this.name,
       image_test: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
-      image: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
-      // image: this.appService.getPic(this.hashedName)
+      // TODO: image alias from docker not working
+      // image: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
+      image_path: `monster/${this.hashedName}?size=100`
     }
   }
+
+  @Post('/change-name')
+  changeName(@Param() name, @Res() res) {
+
+    console.log('===================================================')
+    console.log(name)
+    console.log(res)
+    console.log('===================================================')
+
+
+    this.name = name;
+    return res.redirect('/');
+  }
+
 
   @Get('/avatar/:name')
   async getImage(@Param() name, @Res() res) {
