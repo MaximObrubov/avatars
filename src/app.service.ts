@@ -22,6 +22,6 @@ export class AppService {
       map((axiosResponse: AxiosResponse) => {
         return axiosResponse.data;
       })
-    );;
+    );
   }
 }
