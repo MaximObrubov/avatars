@@ -5,7 +5,11 @@ import {
   Param,
   Res,
   Post,
+  CACHE_MANAGER,
+  Inject
 } from '@nestjs/common';
+//import the cache manager
+import Cache from 'cache-manager';
 import { AppService } from './app.service';
 
 import * as crypto from 'crypto';
@@ -17,7 +21,10 @@ export class AppController {
 
   name: string;
 
-  constructor(private readonly appService: AppService) {
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly appService: AppService,
+  ) {
     this.name = this.defaultName;
   }
 
@@ -25,7 +32,7 @@ export class AppController {
   @Render('index')
   getHello() {
     return {
-      message: 'Hello111 world!',
+      message: 'Avatars Service!',
       name: this.name,
       image_test: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
       // TODO: image alias from docker not working
@@ -36,14 +43,7 @@ export class AppController {
 
   @Post('/change-name')
   changeName(@Param() name, @Res() res) {
-
-    console.log('===================================================')
-    console.log(name)
-    console.log(res)
-    console.log('===================================================')
-
-
-    this.name = name;
+    this.name = res.req.body.name;
     return res.redirect('/');
   }
 

@@ -28,3 +28,5 @@ services:
     volumes:
       - ./src:/home/node/app/src
       - /home/node/app/node_modules
+  redis:
+    image: redis:3.0.5
