@@ -28,10 +28,11 @@
 
     <h4>hello, {{ name }}</h4>
 
-    {{#if image_path}}
+    {{#if name}}
       {{!-- TODO not working alias for container --}}
       {{!-- <img src="{{image}}" alt=""> --}}
-      <img class="avatar" src="http://localhost:8080/{{image_path}}" alt="">
+      {{!-- <img class="avatar" src="http://localhost:8080/{{image_path}}" alt=""> --}}
+      <img class="avatar" src="{{image}}" alt="">
     {{else}}
       No image
     {{/if}}

@@ -7,11 +7,12 @@ import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
 
+import * as crypto from 'crypto';
+import { monitorEventLoopDelay } from 'perf_hooks';
+
 
 @Injectable()
 export class AppService {
-
-  PIC_SERVICE_URL = `${process.env.IMAGE_GEN_HOST}`;
 
   constructor(private http: HttpService) {}
 
@@ -19,12 +20,23 @@ export class AppService {
     return 'Hello World!';
   }
 
-  // TODO: probably don't needed
-  getPic(name: string): Observable<AxiosResponse<ImageBitmap>> {
-    return this.http.get(`${this.PIC_SERVICE_URL}/${name}`).pipe(
-      map((axiosResponse: AxiosResponse) => {
-        return axiosResponse.data;
-      })
-    );
+  async getPic(name, size=200): Promise<ImageBitmap|string> {
+    return this.http.axiosRef.get("http://" + this.avatarUrl(name) + `?size=${size}`, {
+      headers: {
+        'Content-Type': 'image/png',
+      },
+      responseType: 'arraybuffer'
+    }).then(response => {
+      return "data:image/png;base64," + Buffer.from(response.data).toString('base64')
+    })
   }
+
+  hashedName(name) {
+    return crypto.createHash('md5').update(name).digest('hex');
+  }
+
+  private avatarUrl(name): string {
+    return `${process.env.IMAGE_GEN_HOST}/${this.hashedName(name)}`;
+  }
+
 }

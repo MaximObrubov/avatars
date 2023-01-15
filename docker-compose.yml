@@ -1,28 +1,28 @@
 version: "3.9"
 
 networks:
-  avy-net:
+  avatars:
     driver: bridge
 
 services:
   dnmonster:
-    image: saddroopy/dnmonster
-    container_name: avatars_dbmonster_container
+    image: saddroopy/dnmonster:latest
+    container_name: dnmonster_container
     ports:
       - "8080:8080"
     networks:
-      - avy-net
+      - avatars
 
   avatar:
     build: .
-    container_name: avatars_serv_container
+    container_name: serv_container
     ports:
       - "3000:3000"
     environment:
       - ENV=DEV
       - IMAGE_GEN_HOST=dnmonster:8080/monster
     networks:
-      - avy-net
+      - avatars
     depends_on:
       - dnmonster
     volumes:
@@ -30,3 +30,5 @@ services:
       - /home/node/app/node_modules
   redis:
     image: redis:3.0.5
+    networks:
+      - avatars

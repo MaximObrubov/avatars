@@ -3,16 +3,19 @@ import {
   Get,
   Render,
   Param,
+  Response,
   Res,
   Post,
   CACHE_MANAGER,
-  Inject
+  Inject,
 } from '@nestjs/common';
+
 //import the cache manager
 import Cache from 'cache-manager';
 import { AppService } from './app.service';
 
-import * as crypto from 'crypto';
+import { createReadStream } from 'fs';
+import { Observable } from 'rxjs';
 
 @Controller()
 export class AppController {
@@ -30,30 +33,21 @@ export class AppController {
 
   @Get()
   @Render('index')
-  getHello() {
+  async getHello() {
     return {
       message: 'Avatars Service!',
       name: this.name,
-      image_test: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
+      // image_url: `${process.env.IMAGE_GEN_HOST}/${this.appService.hashedName(this.name)}`,
       // TODO: image alias from docker not working
-      // image: `${this.appService.PIC_SERVICE_URL}/${this.hashedName}`,
-      image_path: `monster/${this.hashedName}?size=100`
+      image: await this.appService.getPic(this.name),
     }
   }
 
   @Post('/change-name')
-  changeName(@Param() name, @Res() res) {
+  changeName(@Param('name') name, @Res() res) {
+    // NOTE: name param is not valid, becase t"name is fomr input 
     this.name = res.req.body.name;
     return res.redirect('/');
   }
 
-
-  @Get('/avatar/:name')
-  async getImage(@Param() name, @Res() res) {
-    return this.appService.getPic(name);
-  }
-
-  private get hashedName() {
-    return crypto.createHash('md5').update(this.name).digest('hex');
-  }
 }
