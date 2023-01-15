@@ -21,6 +21,7 @@ services:
     environment:
       - ENV=DEV
       - IMAGE_GEN_HOST=dnmonster:8080/monster
+      - REDIS_HOST=redis
     networks:
       - avatars
     depends_on:
@@ -32,3 +33,11 @@ services:
     image: redis:3.0.5
     networks:
       - avatars
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
+    driver: local

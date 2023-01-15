@@ -6,26 +6,23 @@ import {
   Response,
   Res,
   Post,
-  CACHE_MANAGER,
-  Inject,
 } from '@nestjs/common';
 
-//import the cache manager
-import Cache from 'cache-manager';
 import { AppService } from './app.service';
 
-import { createReadStream } from 'fs';
-import { Observable } from 'rxjs';
 
 @Controller()
 export class AppController {
 
   defaultName = 'John Doe'
 
+  CACHE_PREFIX = "avatars_"
+
   name: string;
 
+
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    // @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly appService: AppService,
   ) {
     this.name = this.defaultName;
@@ -34,6 +31,16 @@ export class AppController {
   @Get()
   @Render('index')
   async getHello() {
+
+    const hashedName = this.appService.hashedName(this.name);
+
+
+    // TODO: cache isn't working properly
+    // @ts-ignore
+    // const cached = await this.cacheManager.get(this.CACHE_PREFIX + hashedName);
+
+
+
     return {
       message: 'Avatars Service!',
       name: this.name,
@@ -45,7 +52,7 @@ export class AppController {
 
   @Post('/change-name')
   changeName(@Param('name') name, @Res() res) {
-    // NOTE: name param is not valid, becase t"name is fomr input 
+    // NOTE: `name` param is not valid, becase it is a form input
     this.name = res.req.body.name;
     return res.redirect('/');
   }
