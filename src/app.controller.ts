@@ -31,16 +31,6 @@ export class AppController {
   @Get()
   @Render('index')
   async getHello() {
-
-    const hashedName = this.appService.hashedName(this.name);
-
-
-    // TODO: cache isn't working properly
-    // @ts-ignore
-    // const cached = await this.cacheManager.get(this.CACHE_PREFIX + hashedName);
-
-
-
     return {
       message: 'Avatars Service!',
       name: this.name,

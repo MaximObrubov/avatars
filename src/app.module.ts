@@ -1,7 +1,6 @@
 //import CacheModule from '@neskjs/common/cache';
 import type { ClientOpts } from 'redis';
-// import * as redisStore from 'cache-manager-redis-store';
-import { redisStore } from 'cache-manager-redis-store'
+import * as redisStore from 'cache-manager-redis-store';
 import { Module, CacheModule, CacheStore } from '@nestjs/common';
 
 //import redisStore from 'cache-manager-redis-store';
@@ -20,8 +19,8 @@ import { AppService } from './app.service';
     // }),
     CacheModule.register({
       isGlobal: true,
-      store: redisStore as undefined as CacheStore,
-      host: 'localhost',
+      store: redisStore,
+      host: process.env.REDIS_HOST,
       port: 6379,
     }),
     HttpModule

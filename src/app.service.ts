@@ -24,7 +24,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async getPic1(name, size=200): Promise<ImageBitmap|string> {
+  async getPic(name, size=200): Promise<ImageBitmap|string> {
     const type = 'image/png';
     const hashedName = this.hashedName(name);
 
@@ -45,20 +45,6 @@ export class AppService {
 
     // @ts-ignore
     await this.cacheService.set(hashedName, image64);
-    return image64;
-  }
-
-
-  async getPic(name, size=200): Promise<ImageBitmap|string> {
-    const type = 'image/png';
-    const hashedName = this.hashedName(name);
-
-    const response = await this.http.axiosRef.get("http://" + this.avatarUrl(name) + `?size=${size}`, {
-      headers: { 'Content-Type': type },
-      responseType: 'arraybuffer' // NOTE: it's important for receiving files
-    });
-    const image64 = `data:${type};base64,` + Buffer.from(response.data).toString('base64')
-
     return image64;
   }
 
